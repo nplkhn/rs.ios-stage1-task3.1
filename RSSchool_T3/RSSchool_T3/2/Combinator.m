@@ -1,7 +1,7 @@
 #import "Combinator.h"
 
-double factorialWithNumber(double number) {
-    double factorial = 1;
+long long factorialWithNumber(long long number) {
+    long long factorial = 1;
     for (int i = 2; i <= number; i++) {
         factorial *= i;
     }
@@ -10,12 +10,12 @@ double factorialWithNumber(double number) {
 
 @implementation Combinator
 - (NSNumber*)chechChooseFromArray:(NSArray <NSNumber*>*)array {
-    int m = array[0].doubleValue, n = array[1].doubleValue, k = 1.0;
-    int C = factorialWithNumber(n)/(factorialWithNumber(k)*(factorialWithNumber(n-k)));
+    long long m = array[0].unsignedLongLongValue, n = array[1].unsignedLongLongValue, k = 1;
+    long long C = factorialWithNumber(n)/(factorialWithNumber(k)*(factorialWithNumber(n-k)));
     for (k = 1; k < n; k++) {
         C = factorialWithNumber(n)/(factorialWithNumber(k)*(factorialWithNumber(n-k)));
         if (C >= m) {
-            return [NSNumber numberWithDouble: k];
+            return [NSNumber numberWithUnsignedLongLong: k];
         }
     }
     return nil;
