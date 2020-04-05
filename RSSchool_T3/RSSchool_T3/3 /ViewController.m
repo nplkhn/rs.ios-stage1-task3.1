@@ -21,7 +21,6 @@
 
 @end
 
-// TODO: error then not all field filled or values not in range, than focus
 
 @implementation ViewController
 
@@ -29,17 +28,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setLabels];
-    [self setTextFields];
-    [self setProcessButton];
-    [self setColorBlockView];
+    [self initLabels];
+    [self initTextFields];
+    [self initProcessButton];
+    [self initColorBlockView];
     [self setAccessibilityIdentifiers];
     [self addTargetToProcessButton];
     [self subscribeOnTapOnTextFieldEvents];
-    // todo
+    [self hideKeyboardThenTappedAround];
 }
 
-- (void)setLabels {
+- (void)initLabels {
     CGFloat x = 20.0;
     CGFloat y = 100.0;
     CGFloat width = 100.0;
@@ -47,66 +46,65 @@
     
     // color label
     self.labelResultColor = [[UILabel alloc] init];
-    [self.labelResultColor setText:@"Color"];
-    [self.labelResultColor setFrame:CGRectMake(x, y, width, height)];
+    [self setLabel:self.labelResultColor X:x Y:y Width:width Height:height Text:@"Color"];
     
     // red color label
     width -= 30.0;
+    y = self.labelResultColor.frame.origin.y + self.labelResultColor.frame.size.height + 45.0;
     self.labelRed = [[UILabel alloc]init];
-    self.labelRed.text = @"RED";
-    [self.labelRed setFrame:CGRectMake(x, self.labelResultColor.frame.origin.y + self.labelResultColor.frame.size.height + 45.0 , width, height)];
+    [self setLabel:self.labelRed X:x Y:y Width:width Height:height Text:@"RED"];
     
     // green color label
+    y = self.labelRed.frame.origin.y + self.labelRed.frame.size.height + 40.0;
     self.labelGreen = [[UILabel alloc]init];
-    self.labelGreen.text = @"GREEN";
-    [self.labelGreen setFrame:CGRectMake(x, self.labelRed.frame.origin.y + self.labelRed.frame.size.height + 40.0 , width, height)];
+    [self setLabel:self.labelGreen X:x Y:y Width:width Height:height Text:@"GREEN"];
     
     // blue color label
+    y = self.labelGreen.frame.origin.y + self.labelGreen.frame.size.height + 40.0;
     self.labelBlue = [[UILabel alloc]init];
-    self.labelBlue.text = @"BLUE";
-    [self.labelBlue setFrame:CGRectMake(x, self.labelGreen.frame.origin.y + self.labelGreen.frame.size.height + 40.0 , width, height)];
+    [self setLabel:self.labelBlue X:x Y:y Width:width Height:height Text:@"BLUE"];
     
-    [self.view addSubview:self.labelResultColor];
-    [self.view addSubview:self.labelRed];
-    [self.view addSubview:self.labelBlue];
-    [self.view addSubview:self.labelGreen];
 }
 
-- (void)setTextFields {
+- (void)setLabel:(UILabel*)label X:(CGFloat)x Y:(CGFloat)y Width:(CGFloat)width Height:(CGFloat)height Text:(NSString*)text {
+    CGRect frame = CGRectMake(x, y, width, height);
+    label.frame = frame;
+    [label setText:text];
+    [self.view addSubview:label];
+}
+
+- (void)initTextFields {
     CGFloat x = self.labelRed.frame.origin.x + self.labelRed.frame.size.width + 15.0;
     CGFloat y = self.labelRed.frame.origin.y - 2;
     CGFloat width = [UIScreen mainScreen].bounds.size.width - 45.0 - self.labelRed.frame.origin.x - self.labelResultColor.frame.size.width;
     CGFloat height = 30.0;
     
     // red color text field
-    self.textFieldRed = [[UITextField alloc] initWithFrame:CGRectMake(x, y, width, height)];
-    self.textFieldRed.layer.borderColor = UIColor.lightGrayColor.CGColor;
-    self.textFieldRed.layer.borderWidth = 1.0;
-    self.textFieldRed.layer.cornerRadius = 5.0;
-    [self.textFieldRed setPlaceholder:@"0..255"];
+    self.textFieldRed = [[UITextField alloc] init];
+    [self setTextField:self.textFieldRed X:x Y:y Width:width Height:height];
     
     // green color text field
     y = self.labelGreen.frame.origin.y - 2;
-    self.textFieldGreen = [[UITextField alloc] initWithFrame:CGRectMake(x, y, width, height)];
-    self.textFieldGreen.layer.borderColor = UIColor.lightGrayColor.CGColor;
-    self.textFieldGreen.layer.borderWidth = 1.0;
-    self.textFieldGreen.layer.cornerRadius = 5.0;
-    [self.textFieldGreen setPlaceholder:@"0..255"];
+    self.textFieldGreen = [[UITextField alloc] init];
+    [self setTextField:self.textFieldGreen X:x Y:y Width:width Height:height];
     
     // blue color text field
     y = self.labelBlue.frame.origin.y - 2;
-    self.textFieldBlue = [[UITextField alloc] initWithFrame:CGRectMake(x, y, width, height)];
-    self.textFieldBlue.layer.borderColor = UIColor.lightGrayColor.CGColor;
-    self.textFieldBlue.layer.borderWidth = 1.0;
-    self.textFieldBlue.layer.cornerRadius = 5.0;
-    [self.textFieldBlue setPlaceholder:@"0..255"];
-    
-    [self.view addSubview:self.textFieldRed];
-    [self.view addSubview:self.textFieldGreen];
-    [self.view addSubview:self.textFieldBlue];
+    self.textFieldBlue = [[UITextField alloc] init];
+    [self setTextField:self.textFieldBlue X:x Y:y Width:width Height:height];
 }
 
-- (void)setProcessButton {
+- (void)setTextField:(UITextField*)textField X:(CGFloat)x Y:(CGFloat)y Width:(CGFloat)width Height:(CGFloat)height {
+    CGRect frame = CGRectMake(x, y, width, height);
+    textField.frame = frame;
+    textField.layer.borderColor = UIColor.lightGrayColor.CGColor;
+    textField.layer.borderWidth = 1.0;
+    textField.layer.cornerRadius = 5.0;
+    [textField setPlaceholder:@"0..255"];
+    [self.view addSubview:textField];
+}
+
+- (void)initProcessButton {
     self.buttonProcess = [[UIButton alloc] init];
     [self.buttonProcess setTitle:@"Process" forState:UIControlStateNormal];
     CGFloat width = 100.0;
@@ -120,7 +118,7 @@
     [self.view addSubview:self.buttonProcess];
 }
 
-- (void)setColorBlockView {
+- (void)initColorBlockView {
     self.viewResultColor = [[UIView alloc] init];
     
     CGFloat x = self.labelResultColor.frame.origin.x + self.labelResultColor.frame.size.width + 15.0;
@@ -224,6 +222,13 @@
                                            selector:@selector(setResultColorLabelToDefaultState)
                                                name:UITextFieldTextDidBeginEditingNotification
                                              object:nil];
+}
+
+- (void)hideKeyboardThenTappedAround {
+    UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(hideKeyboard)];
+    
+    [self.view addGestureRecognizer:gesture];
 }
 
 @end
