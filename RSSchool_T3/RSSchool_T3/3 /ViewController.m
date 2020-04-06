@@ -113,7 +113,7 @@
     CGFloat height = 20.0;
     CGRect frame = CGRectMake(x, y, width, height);
     self.buttonProcess.frame = frame;
-    [self.buttonProcess setTitleColor:UIColor.systemBlueColor forState:UIControlStateNormal];
+    [self.buttonProcess setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
 
     [self.view addSubview:self.buttonProcess];
 }
